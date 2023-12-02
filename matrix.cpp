@@ -105,3 +105,65 @@ matrix& matrix::losuj(int x){
     }
     return *this;
 }
+
+matrix& matrix::diagonalna(int* t){
+    for (int i = 0; i < size; ++i){
+        for(int j = 0; j < size; ++j){
+            if(i == j){
+                data[i][j] = t[i];
+            }
+            else{
+                data[i][j] = 0;
+            }
+        }
+    }
+    return *this;
+}
+
+matrix& matrix::diagonalna_k(int k, int*t){
+    // Wstawiamy wartości do macierzy na przekątnej k
+    for (int i = 0; i < size; ++i){
+        for(int j = 0; j < size; ++j){
+            if(i == j + k){
+                data[i][j] = t[i];
+            }
+            else{
+                data[i][j] = 0;
+            }
+        }
+    }
+    return *this;
+}
+
+matrix& matrix::diagonalna(){
+    // Wstawiamy wartości do macierzy na przekątnej
+    for (int i = 0; i < size; ++i){
+        for (int j = 0; j < size; ++j){
+            if(i == j){
+                data[i][j] = 1;
+            }
+            else{
+                data[i][j] = 0;
+            }
+        }
+    }
+    return *this;
+}
+
+matrix& matrix::kolumna(int x, int* t){
+    // Wstawiamy wartości do kolumny x
+    for (int i = 0; i < size; ++i){
+        data[i][x] = t[i];
+    }
+    return *this;
+}
+
+matrix& matrix::wiersz(int x, int* t){
+    // Wstawiamy wartości do wiersza x
+    for (int i = 0; i < size; ++i){
+        data[x][i] = t[i];
+    }
+    return *this;
+}
+
+
