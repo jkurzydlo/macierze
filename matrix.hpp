@@ -29,6 +29,20 @@ public:
     matrix& pod_przekatna();
     matrix& nad_przekatna();
     matrix& szachownica();
+
+    matrix& operator+(matrix& m);
+    matrix& operator*(matrix& m);
+    matrix& operator-(matrix& m);
+    matrix& operator=(matrix& m);
+    matrix& operator+(int a);
+    matrix& operator*(int a);
+    matrix& operator-(int a);
+    friend matrix operator+(int a, matrix& m);
+    friend matrix operator*(int a, matrix& m);
+    friend matrix operator-(int a, matrix& m);
+    matrix& operator++();
+    matrix& operator--();
+    matrix& operator*(double a);
 };
 
 #endif // MATRIX_HPP

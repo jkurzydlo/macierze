@@ -211,3 +211,121 @@ matrix& matrix::szachownica(){
     return *this;
 }
 
+matrix& matrix::operator+(matrix& m){
+    // Dodawanie macierzy A+B
+    matrix* temp = new matrix(size);
+    for (int i = 0; i < size; ++i){
+        for(int j = 0; j < size; ++j){
+            temp->data[i][j] = data[i][j] + m.data[i][j];
+        }
+    }
+    return *temp;
+}
+
+// Operatorzy
+
+matrix& matrix::operator-(matrix& m){
+    // Odejmowanie macierzy A-B
+    matrix* temp = new matrix(size);
+    for (int i = 0; i < size; ++i){
+        for(int j = 0; j < size; ++j){
+            temp->data[i][j] = data[i][j] - m.data[i][j];
+        }
+    }
+    return *temp;
+}
+
+matrix& matrix::operator*(matrix& m){
+    // Mnożenie macierzy A*B
+    matrix* temp = new matrix(size);
+    for (int i = 0; i < size; ++i){
+        for(int j = 0; j < size; ++j){
+            for(int k = 0; k < size; ++k){
+                temp->data[i][j] += data[i][k] * m.data[k][j];
+            }
+        }
+    }
+    return *temp;
+}
+
+matrix& matrix::operator*(int x){
+    // Mnożenie macierzy przez liczbę całkowitą x
+    matrix* temp = new matrix(size);
+    for (int i = 0; i < size; ++i){
+        for(int j = 0; j < size; ++j){
+            temp->data[i][j] = data[i][j] * x;
+        }
+    }
+    return *temp;
+}
+
+matrix& matrix::operator-(int a){
+    // Odejmowanie liczby całkowitej a od macierzy
+    matrix* temp = new matrix(size);
+    for (int i = 0; i < size; ++i){
+        for(int j = 0; j < size; ++j){
+            temp->data[i][j] = data[i][j] - a;
+        }
+    }
+    return *temp;
+}
+
+matrix& matrix::operator++(){
+    // Dodawanie 1 do każdego elementu macierzy
+    matrix* temp = new matrix(size);
+    for (int i = 0; i < size; ++i){
+        for(int j = 0; j < size; ++j){
+            temp->data[i][j] = data[i][j] + 1;
+        }
+    }
+    return *temp;
+}
+
+matrix& matrix::operator--(){
+    // Odejmowanie 1 od każdego elementu macierzy
+    matrix* temp = new matrix(size);
+    for (int i = 0; i < size; ++i){
+        for(int j = 0; j < size; ++j){
+            temp->data[i][j] = data[i][j] - 1;
+        }
+    }
+    return *temp;
+}
+
+matrix& matrix::operator+(int a){
+    // Dodawanie liczby całkowitej a do macierzy
+    matrix* temp = new matrix(size);
+    for (int i = 0; i < size; ++i){
+        for(int j = 0; j < size; ++j){
+            temp->data[i][j] = data[i][j] + a;
+        }
+    }
+    return *temp;
+}
+
+matrix& matrix::operator=(matrix& m){
+    // Przypisanie macierzy A = B
+    if(this == &m){
+        return *this;
+    }
+    else{
+        for (int i = 0; i < size; ++i){
+            for(int j = 0; j < size; ++j){
+                data[i][j] = m.data[i][j];
+            }
+        }
+    }
+    return *this;
+}
+
+matrix& matrix::operator*(double a){
+    // Mnożenie macierzy przez liczbę zmiennoprzecinkową a
+    matrix* temp = new matrix(size);
+    for (int i = 0; i < size; ++i){
+        for(int j = 0; j < size; ++j){
+            temp->data[i][j] = data[i][j] * a;
+        }
+    }
+    return *temp;
+}
+
