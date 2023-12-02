@@ -26,6 +26,9 @@ public:
     matrix& kolumna(int x, int* t);
     matrix& wiersz(int y, int* t);
     matrix& diagonalna();
+    matrix& pod_przekatna();
+    matrix& nad_przekatna();
+    matrix& szachownica();
 };
 
 #endif // MATRIX_HPP

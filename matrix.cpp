@@ -166,4 +166,48 @@ matrix& matrix::wiersz(int x, int* t){
     return *this;
 }
 
+matrix& matrix::pod_przekatna(){
+    // Wstawiamy wartości pod przekątną
+    for (int i = 0; i < size; ++i){
+        for (int j = 0; j < size; ++j){
+            if(i > j){
+                data[i][j] = 1;
+            }
+            else{
+                data[i][j] = 0;
+            }
+        }
+    }
+    return *this;
+}
+
+matrix& matrix::nad_przekatna(){
+    // Wstawiamy wartości nad przekątną
+    for (int i = 0; i < size; ++i){
+        for (int j = 0; j < size; ++j){
+            if(i < j){
+                data[i][j] = 1;
+            }
+            else{
+                data[i][j] = 0;
+            }
+        }
+    }
+    return *this;
+}
+
+matrix& matrix::szachownica(){
+    // Wstawiamy wartości do macierzy w szachownicę
+    for (int i = 0; i < size; ++i){
+        for (int j = 0; j < size; ++j){
+            if((i + j) % 2 == 0){
+                data[i][j] = 0;
+            }
+            else{
+                data[i][j] = 1;
+            }
+        }
+    }
+    return *this;
+}
 
