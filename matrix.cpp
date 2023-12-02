@@ -1,6 +1,7 @@
 #include "matrix.hpp"
 #include <cstdlib>
 #include <ctime>
+#include <iostream>
 
 matrix::matrix() {
     data = nullptr;
@@ -63,16 +64,44 @@ matrix& matrix::alokuj(int n) {
 
 matrix& matrix::wstaw(int x, int y, int wartosc) {
     // Wstawiamy wartość do odpowiedniego miejsca w macierzy
-    // (zakładam, że x i y są poprawne)
     data[x][y] = wartosc;
     return *this;
 }
 
 int matrix::pokaz(int x, int y) {
     // Zwracamy wartość elementu x, y
-    // (zakładam, że x i y są poprawne)
     return data[x][y];
 }
 
-// Kolejne metody...
+matrix& matrix::dowroc(){
+    // Zamieniamy wiersze z kolumnami
+    matrix temp = *this;
+    for(int i = 0; i < size; ++i){
+        for(int j = 0; j < size; ++j){
+            data[i][j] = temp.data[j][i];
+        }
+    }   
+    return *this;
+}
 
+matrix& matrix::losuj(){
+    // Losujemy wartości do macierzy
+    srand(static_cast<unsigned int>(time(0)));
+    for (int i = 0; i < size; ++i){
+        for(int j = 0; j < size; ++j){
+            data[i][j] = rand() % 10;
+        }
+    }
+    return *this;
+}
+
+matrix& matrix::losuj(int x){
+    // Losujemy wartości do macierzy
+    srand(static_cast<unsigned int>(time(0)));
+    for (int k = 0; k < size; ++k){
+        int i = rand() % size;
+        int j = rand() % size;
+        data[i][j] = rand() % 10;
+    }
+    return *this;
+}
