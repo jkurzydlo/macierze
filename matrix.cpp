@@ -1,187 +1,78 @@
-#include "matrix.h"
-#include <iostream>
-matrix matrix::operator+(matrix& m2)
-{
-    matrix temp(rozmiar_m);
-    for (int i = 0; i < rozmiar_m; i++)
-        for (int j = 0; j < rozmiar_m; j++) {
-            temp.tab[i][j] = tab[i][j] + m2.tab[i][j];
-        }
-    return temp;
+#include "matrix.hpp"
+#include <cstdlib>
+#include <ctime>
+
+matrix::matrix() {
+    data = nullptr;
+    size = 0;
 }
 
-matrix matrix::operator*(matrix& m2)
-{
-    matrix temp(rozmiar_m);
+matrix::matrix(int n) {
+    alokuj(n);
+}
 
-    for (int i = 0; i < rozmiar_m; i++) {
-        for (int j = 0; j < rozmiar_m; j++) {
-            for (int k = 0; k < rozmiar_m; k++) {
-                temp.tab[i][j] += tab[i][k] * m2.tab[k][j];
+matrix::matrix(int n, int* t) {
+    alokuj(n);
+    for (int i = 0; i < size; ++i) {
+        for (int j = 0; j < size; ++j) {
+            data[i][j] = t[i * size + j];
+        }
+    }
+}
+
+matrix::matrix(const matrix& m) {
+    alokuj(m.size);
+    for (int i = 0; i < size; ++i) {
+        for (int j = 0; j < size; ++j) {
+            data[i][j] = m.data[i][j];
+        }
+    }
+}
+
+matrix::~matrix() {
+    if (data != nullptr) {
+        for (int i = 0; i < size; ++i) {
+            delete[] data[i];
+        }
+        delete[] data;
+    }
+}
+
+matrix& matrix::alokuj(int n) {
+    if (data != nullptr) {
+        // Sprawdzamy czy rozmiar alokacji jest równy zdeklarowanemu rozmiarowi
+        if (size != n) {
+            // Jeśli nie, zwalniamy pamięć i alokujemy ponownie
+            for (int i = 0; i < size; ++i) {
+                delete[] data[i];
             }
+            delete[] data;
+            data = nullptr;
         }
     }
-    return temp;
-}
-
-matrix matrix::operator-(int l)
-{
-    matrix temp(rozmiar_m);
-
-    for (int i = 0; i < rozmiar_m; i++)
-        for (int j = 0; j < rozmiar_m; j++)
-            temp.tab[i][j] = tab[i][j] - l;
-}
-
-matrix matrix::operator*(int l)
-{
-    matrix temp(rozmiar_m);
-
-    for (int i = 0; i < rozmiar_m; i++)
-        for (int j = 0; j < rozmiar_m; j++)
-            temp.tab[i][j] = tab[i][j] * l;
-}
-
-matrix matrix::operator+(int l)
-{
-    matrix temp(rozmiar_m);
-
-    for (int i = 0; i < rozmiar_m; i++)
-        for (int j = 0; j < rozmiar_m; j++)
-            temp.tab[i][j] = tab[i][j] + l;
-}
-
-matrix& matrix::operator++(int)
-{
-    for (int i = 0; i < rozmiar_m; i++)
-        for (int j = 0; j < rozmiar_m; j++)
-            tab[i][j]++;
-    return *this;
-}
-
-matrix& matrix::operator--(int)
-{
-    for (int i = 0; i < rozmiar_m; i++)
-        for (int j = 0; j < rozmiar_m; j++)
-            tab[i][j]--;
-    return *this;
-}
-
-matrix& matrix::operator+=(int l)
-{
-    for (int i = 0; i < rozmiar_m; i++)
-        for (int j = 0; j < rozmiar_m; j++)
-            tab[i][j]+=l;
-    return *this;
-}
-
-matrix& matrix::operator*=(int l)
-{
-    for (int i = 0; i < rozmiar_m; i++)
-        for (int j = 0; j < rozmiar_m; j++)
-            tab[i][j]*=l;
-    return *this;
-}
-
-matrix& matrix::operator-=(int l)
-{
-    for (int i = 0; i < rozmiar_m; i++)
-        for (int j = 0; j < rozmiar_m; j++)
-            tab[i][j]-=l;
-    return *this;
-}
-
-
-bool matrix::operator==(const matrix& m2)
-{
-    for (int i = 0; i < rozmiar_m; i++)
-        for (int j = 0; j < rozmiar_m; j++)
-            if (tab[i][j] != m2.tab[i][j]) 
-                return false;
-    return true;
-}
-
-bool matrix::operator>(const matrix& m2)
-{
-    int sum1=0, sum2 = 0;
-    for (int i = 0; i < rozmiar_m; i++) sum1 += tab[i][j];
-    for (int i = 0; i < rozmiar_m; i++) sum2 += m2.tab[i][j];
-
-    return (sum1 > sum2);
-
-}
-
-bool matrix::operator<(const matrix& m2)
-{
-    int sum1 = 0, sum2 = 0;
-    for (int i = 0; i < rozmiar_m; i++) sum1 += tab[i][j];
-    for (int i = 0; i < rozmiar_m; i++) sum2 += m2.tab[i][j];
-
-    return (sum1 < sum2);
-
-}
-
-
-matrix& matrix::alokuj(int rozmiar)
-{
-
-    rozmiar_m = rozmiar;
-    tab = new int*[rozmiar * rozmiar];
-
-    for (int i = 0; i < rozmiar; i++) {
-        tab[i] = new int[rozmiar];
-    }
-
-    for (int i = 0; i < rozmiar;i++)
-        for (int j = 0; j < rozmiar; j++) tab[i][j] = 0;
-    return *this;
-
-}
-
-matrix& matrix::wstaw(int x, int y, int wartosc)
-{
-    tab[x][y] = wartosc;
-    return *this;
-}
-
-matrix operator+(int l, matrix& m2)
-{
-    matrix temp(m2.rozmiar_m);
-    for (int i = 0; i < m2.rozmiar_m; i++) {
-        for (int j = 0; j < m2.rozmiar_m; j++) {
-            temp.tab[i][j] = m2.tab[i][j] + l;
+    // Jeśli data == nullptr lub rozmiar alokacji jest różny od zdeklarowanego
+    if (data == nullptr) {
+        size = n;
+        data = new int*[size];
+        for (int i = 0; i < size; ++i) {
+            data[i] = new int[size];
         }
     }
-    return temp;
+    return *this;
 }
 
-matrix operator*(int l, matrix& m2)
-{
-    matrix temp(m2.rozmiar_m);
-    for (int i = 0; i < m2.rozmiar_m; i++) {
-        for (int j = 0; j < m2.rozmiar_m; j++) {
-            temp.tab[i][j] = m2.tab[i][j] * l;
-        }
-    }
-    return temp;
+matrix& matrix::wstaw(int x, int y, int wartosc) {
+    // Wstawiamy wartość do odpowiedniego miejsca w macierzy
+    // (zakładam, że x i y są poprawne)
+    data[x][y] = wartosc;
+    return *this;
 }
 
-matrix operator-(int l , matrix& m2)
-{
-    matrix temp(m2.rozmiar_m);
-    for (int i = 0; i < m2.rozmiar_m; i++) {
-        for (int j = 0; j < m2.rozmiar_m; j++) {
-            temp.tab[i][j] = m2.tab[i][j] - l;
-        }
-    }
-    return temp;
+int matrix::pokaz(int x, int y) {
+    // Zwracamy wartość elementu x, y
+    // (zakładam, że x i y są poprawne)
+    return data[x][y];
 }
 
-std::ostream& operator<<(std::ostream os, matrix& m2)
-{
-    for (int i = 0; i < m2.rozmiar_m; i++) {
-        for (int j = 0; j < m2.rozmiar_m; j++) os << m2.tab[i][j] << " ";
-        os << std::endl;
-    }
+// Kolejne metody...
 
-}
