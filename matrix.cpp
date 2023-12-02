@@ -329,3 +329,64 @@ matrix& matrix::operator*(double a){
     return *temp;
 }
 
+std::ostream& operator<<(std::ostream& o, matrix& m){
+    // Wypisywanie macierzy
+    for (int i = 0; i < m.size; ++i){
+        for(int j = 0; j < m.size; ++j){
+            o << m.data[i][j] << " ";
+        }
+        o << std::endl;
+    }
+    return o;
+}
+
+bool matrix::operator==(const matrix& m){
+    // Porównywanie macierzy
+    if(size != m.size){
+        return false;
+    }
+    else{
+        for (int i = 0; i < size; ++i){
+            for(int j = 0; j < size; ++j){
+                if(data[i][j] != m.data[i][j]){
+                    return false;
+                }
+            }
+        }
+    }
+    return true;
+}
+
+bool matrix::operator>(const matrix& m){
+    // Porównywanie większości macierzy
+    if(size != m.size){
+        return false;
+    }
+    else{
+        for (int i = 0; i < size; ++i){
+            for(int j = 0; j < size; ++j){
+                if(data[i][j] <= m.data[i][j]){
+                    return false;
+                }
+            }
+        }
+    }
+    return true;
+}
+
+bool matrix::operator<(const matrix& m){
+    // Porównywanie mniejszości macierzy
+    if(size != m.size){
+        return false;
+    }
+    else{
+        for (int i = 0; i < size; ++i){
+            for(int j = 0; j < size; ++j){
+                if(data[i][j] >= m.data[i][j]){
+                    return false;
+                }
+            }
+        }
+    }
+    return true;
+}

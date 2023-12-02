@@ -43,6 +43,12 @@ public:
     matrix& operator++();
     matrix& operator--();
     matrix& operator*(double a);
+
+    friend std::ostream& operator<<(std::ostream& o, matrix& m);
+
+    bool operator==(const matrix& m);
+    bool operator>(const matrix& m);
+    bool operator<(const matrix& m);
 };
 
 #endif // MATRIX_HPP
