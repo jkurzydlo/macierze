@@ -1,187 +1,392 @@
-#include "matrix.h"
+#include "matrix.hpp"
+#include <cstdlib>
+#include <ctime>
 #include <iostream>
-matrix matrix::operator+(matrix& m2)
-{
-    matrix temp(rozmiar_m);
-    for (int i = 0; i < rozmiar_m; i++)
-        for (int j = 0; j < rozmiar_m; j++) {
-            temp.tab[i][j] = tab[i][j] + m2.tab[i][j];
-        }
-    return temp;
+
+matrix::matrix() {
+    data = nullptr;
+    size = 0;
 }
 
-matrix matrix::operator*(matrix& m2)
-{
-    matrix temp(rozmiar_m);
+matrix::matrix(int n) {
+    alokuj(n);
+}
 
-    for (int i = 0; i < rozmiar_m; i++) {
-        for (int j = 0; j < rozmiar_m; j++) {
-            for (int k = 0; k < rozmiar_m; k++) {
-                temp.tab[i][j] += tab[i][k] * m2.tab[k][j];
+matrix::matrix(int n, int* t) {
+    alokuj(n);
+    for (int i = 0; i < size; ++i) {
+        for (int j = 0; j < size; ++j) {
+            data[i][j] = t[i * size + j];
+        }
+    }
+}
+
+matrix::matrix(const matrix& m) {
+    alokuj(m.size);
+    for (int i = 0; i < size; ++i) {
+        for (int j = 0; j < size; ++j) {
+            data[i][j] = m.data[i][j];
+        }
+    }
+}
+
+matrix::~matrix() {
+    if (data != nullptr) {
+        for (int i = 0; i < size; ++i) {
+            delete[] data[i];
+        }
+        delete[] data;
+    }
+}
+
+matrix& matrix::alokuj(int n) {
+    if (data != nullptr) {
+        // Sprawdzamy czy rozmiar alokacji jest równy zdeklarowanemu rozmiarowi
+        if (size != n) {
+            // Jeśli nie, zwalniamy pamięć i alokujemy ponownie
+            for (int i = 0; i < size; ++i) {
+                delete[] data[i];
+            }
+            delete[] data;
+            data = nullptr;
+        }
+    }
+    // Jeśli data == nullptr lub rozmiar alokacji jest różny od zdeklarowanego
+    if (data == nullptr) {
+        size = n;
+        data = new int*[size];
+        for (int i = 0; i < size; ++i) {
+            data[i] = new int[size];
+        }
+    }
+    return *this;
+}
+
+matrix& matrix::wstaw(int x, int y, int wartosc) {
+    // Wstawiamy wartość do odpowiedniego miejsca w macierzy
+    data[x][y] = wartosc;
+    return *this;
+}
+
+int matrix::pokaz(int x, int y) {
+    // Zwracamy wartość elementu x, y
+    return data[x][y];
+}
+
+matrix& matrix::dowroc(){
+    // Zamieniamy wiersze z kolumnami
+    matrix temp = *this;
+    for(int i = 0; i < size; ++i){
+        for(int j = 0; j < size; ++j){
+            data[i][j] = temp.data[j][i];
+        }
+    }   
+    return *this;
+}
+
+matrix& matrix::losuj(){
+    // Losujemy wartości do macierzy
+    srand(static_cast<unsigned int>(time(0)));
+    for (int i = 0; i < size; ++i){
+        for(int j = 0; j < size; ++j){
+            data[i][j] = rand() % 10;
+        }
+    }
+    return *this;
+}
+
+matrix& matrix::losuj(int x){
+    // Losujemy wartości do macierzy
+    srand(static_cast<unsigned int>(time(0)));
+    for (int k = 0; k < size; ++k){
+        int i = rand() % size;
+        int j = rand() % size;
+        data[i][j] = rand() % 10;
+    }
+    return *this;
+}
+
+matrix& matrix::diagonalna(int* t){
+    for (int i = 0; i < size; ++i){
+        for(int j = 0; j < size; ++j){
+            if(i == j){
+                data[i][j] = t[i];
+            }
+            else{
+                data[i][j] = 0;
             }
         }
     }
-    return temp;
-}
-
-matrix matrix::operator-(int l)
-{
-    matrix temp(rozmiar_m);
-
-    for (int i = 0; i < rozmiar_m; i++)
-        for (int j = 0; j < rozmiar_m; j++)
-            temp.tab[i][j] = tab[i][j] - l;
-}
-
-matrix matrix::operator*(int l)
-{
-    matrix temp(rozmiar_m);
-
-    for (int i = 0; i < rozmiar_m; i++)
-        for (int j = 0; j < rozmiar_m; j++)
-            temp.tab[i][j] = tab[i][j] * l;
-}
-
-matrix matrix::operator+(int l)
-{
-    matrix temp(rozmiar_m);
-
-    for (int i = 0; i < rozmiar_m; i++)
-        for (int j = 0; j < rozmiar_m; j++)
-            temp.tab[i][j] = tab[i][j] + l;
-}
-
-matrix& matrix::operator++(int)
-{
-    for (int i = 0; i < rozmiar_m; i++)
-        for (int j = 0; j < rozmiar_m; j++)
-            tab[i][j]++;
     return *this;
 }
 
-matrix& matrix::operator--(int)
-{
-    for (int i = 0; i < rozmiar_m; i++)
-        for (int j = 0; j < rozmiar_m; j++)
-            tab[i][j]--;
+matrix& matrix::diagonalna_k(int k, int*t){
+    // Wstawiamy wartości do macierzy na przekątnej k
+    for (int i = 0; i < size; ++i){
+        for(int j = 0; j < size; ++j){
+            if(i == j + k){
+                data[i][j] = t[i];
+            }
+            else{
+                data[i][j] = 0;
+            }
+        }
+    }
     return *this;
 }
 
-matrix& matrix::operator+=(int l)
-{
-    for (int i = 0; i < rozmiar_m; i++)
-        for (int j = 0; j < rozmiar_m; j++)
-            tab[i][j]+=l;
+matrix& matrix::diagonalna(){
+    // Wstawiamy wartości do macierzy na przekątnej
+    for (int i = 0; i < size; ++i){
+        for (int j = 0; j < size; ++j){
+            if(i == j){
+                data[i][j] = 1;
+            }
+            else{
+                data[i][j] = 0;
+            }
+        }
+    }
     return *this;
 }
 
-matrix& matrix::operator*=(int l)
-{
-    for (int i = 0; i < rozmiar_m; i++)
-        for (int j = 0; j < rozmiar_m; j++)
-            tab[i][j]*=l;
+matrix& matrix::kolumna(int x, int* t){
+    // Wstawiamy wartości do kolumny x
+    for (int i = 0; i < size; ++i){
+        data[i][x] = t[i];
+    }
     return *this;
 }
 
-matrix& matrix::operator-=(int l)
-{
-    for (int i = 0; i < rozmiar_m; i++)
-        for (int j = 0; j < rozmiar_m; j++)
-            tab[i][j]-=l;
+matrix& matrix::wiersz(int x, int* t){
+    // Wstawiamy wartości do wiersza x
+    for (int i = 0; i < size; ++i){
+        data[x][i] = t[i];
+    }
     return *this;
 }
 
+matrix& matrix::pod_przekatna(){
+    // Wstawiamy wartości pod przekątną
+    for (int i = 0; i < size; ++i){
+        for (int j = 0; j < size; ++j){
+            if(i > j){
+                data[i][j] = 1;
+            }
+            else{
+                data[i][j] = 0;
+            }
+        }
+    }
+    return *this;
+}
 
-bool matrix::operator==(const matrix& m2)
-{
-    for (int i = 0; i < rozmiar_m; i++)
-        for (int j = 0; j < rozmiar_m; j++)
-            if (tab[i][j] != m2.tab[i][j]) 
-                return false;
+matrix& matrix::nad_przekatna(){
+    // Wstawiamy wartości nad przekątną
+    for (int i = 0; i < size; ++i){
+        for (int j = 0; j < size; ++j){
+            if(i < j){
+                data[i][j] = 1;
+            }
+            else{
+                data[i][j] = 0;
+            }
+        }
+    }
+    return *this;
+}
+
+matrix& matrix::szachownica(){
+    // Wstawiamy wartości do macierzy w szachownicę
+    for (int i = 0; i < size; ++i){
+        for (int j = 0; j < size; ++j){
+            if((i + j) % 2 == 0){
+                data[i][j] = 0;
+            }
+            else{
+                data[i][j] = 1;
+            }
+        }
+    }
+    return *this;
+}
+
+matrix& matrix::operator+(matrix& m){
+    // Dodawanie macierzy A+B
+    matrix* temp = new matrix(size);
+    for (int i = 0; i < size; ++i){
+        for(int j = 0; j < size; ++j){
+            temp->data[i][j] = data[i][j] + m.data[i][j];
+        }
+    }
+    return *temp;
+}
+
+// Operatorzy
+
+matrix& matrix::operator-(matrix& m){
+    // Odejmowanie macierzy A-B
+    matrix* temp = new matrix(size);
+    for (int i = 0; i < size; ++i){
+        for(int j = 0; j < size; ++j){
+            temp->data[i][j] = data[i][j] - m.data[i][j];
+        }
+    }
+    return *temp;
+}
+
+matrix& matrix::operator*(matrix& m){
+    // Mnożenie macierzy A*B
+    matrix* temp = new matrix(size);
+    for (int i = 0; i < size; ++i){
+        for(int j = 0; j < size; ++j){
+            for(int k = 0; k < size; ++k){
+                temp->data[i][j] += data[i][k] * m.data[k][j];
+            }
+        }
+    }
+    return *temp;
+}
+
+matrix& matrix::operator*(int x){
+    // Mnożenie macierzy przez liczbę całkowitą x
+    matrix* temp = new matrix(size);
+    for (int i = 0; i < size; ++i){
+        for(int j = 0; j < size; ++j){
+            temp->data[i][j] = data[i][j] * x;
+        }
+    }
+    return *temp;
+}
+
+matrix& matrix::operator-(int a){
+    // Odejmowanie liczby całkowitej a od macierzy
+    matrix* temp = new matrix(size);
+    for (int i = 0; i < size; ++i){
+        for(int j = 0; j < size; ++j){
+            temp->data[i][j] = data[i][j] - a;
+        }
+    }
+    return *temp;
+}
+
+matrix& matrix::operator++(){
+    // Dodawanie 1 do każdego elementu macierzy
+    matrix* temp = new matrix(size);
+    for (int i = 0; i < size; ++i){
+        for(int j = 0; j < size; ++j){
+            temp->data[i][j] = data[i][j] + 1;
+        }
+    }
+    return *temp;
+}
+
+matrix& matrix::operator--(){
+    // Odejmowanie 1 od każdego elementu macierzy
+    matrix* temp = new matrix(size);
+    for (int i = 0; i < size; ++i){
+        for(int j = 0; j < size; ++j){
+            temp->data[i][j] = data[i][j] - 1;
+        }
+    }
+    return *temp;
+}
+
+matrix& matrix::operator+(int a){
+    // Dodawanie liczby całkowitej a do macierzy
+    matrix* temp = new matrix(size);
+    for (int i = 0; i < size; ++i){
+        for(int j = 0; j < size; ++j){
+            temp->data[i][j] = data[i][j] + a;
+        }
+    }
+    return *temp;
+}
+
+matrix& matrix::operator=(matrix& m){
+    // Przypisanie macierzy A = B
+    if(this == &m){
+        return *this;
+    }
+    else{
+        for (int i = 0; i < size; ++i){
+            for(int j = 0; j < size; ++j){
+                data[i][j] = m.data[i][j];
+            }
+        }
+    }
+    return *this;
+}
+
+matrix& matrix::operator*(double a){
+    // Mnożenie macierzy przez liczbę zmiennoprzecinkową a
+    matrix* temp = new matrix(size);
+    for (int i = 0; i < size; ++i){
+        for(int j = 0; j < size; ++j){
+            temp->data[i][j] = data[i][j] * a;
+        }
+    }
+    return *temp;
+}
+
+std::ostream& operator<<(std::ostream& o, matrix& m){
+    // Wypisywanie macierzy
+    for (int i = 0; i < m.size; ++i){
+        for(int j = 0; j < m.size; ++j){
+            o << m.data[i][j] << " ";
+        }
+        o << std::endl;
+    }
+    return o;
+}
+
+bool matrix::operator==(const matrix& m){
+    // Porównywanie macierzy
+    if(size != m.size){
+        return false;
+    }
+    else{
+        for (int i = 0; i < size; ++i){
+            for(int j = 0; j < size; ++j){
+                if(data[i][j] != m.data[i][j]){
+                    return false;
+                }
+            }
+        }
+    }
     return true;
 }
 
-bool matrix::operator>(const matrix& m2)
-{
-    int sum1=0, sum2 = 0;
-    for (int i = 0; i < rozmiar_m; i++) sum1 += tab[i][j];
-    for (int i = 0; i < rozmiar_m; i++) sum2 += m2.tab[i][j];
-
-    return (sum1 > sum2);
-
-}
-
-bool matrix::operator<(const matrix& m2)
-{
-    int sum1 = 0, sum2 = 0;
-    for (int i = 0; i < rozmiar_m; i++) sum1 += tab[i][j];
-    for (int i = 0; i < rozmiar_m; i++) sum2 += m2.tab[i][j];
-
-    return (sum1 < sum2);
-
-}
-
-
-matrix& matrix::alokuj(int rozmiar)
-{
-
-    rozmiar_m = rozmiar;
-    tab = new int*[rozmiar * rozmiar];
-
-    for (int i = 0; i < rozmiar; i++) {
-        tab[i] = new int[rozmiar];
+bool matrix::operator>(const matrix& m){
+    // Porównywanie większości macierzy
+    if(size != m.size){
+        return false;
     }
-
-    for (int i = 0; i < rozmiar;i++)
-        for (int j = 0; j < rozmiar; j++) tab[i][j] = 0;
-    return *this;
-
-}
-
-matrix& matrix::wstaw(int x, int y, int wartosc)
-{
-    tab[x][y] = wartosc;
-    return *this;
-}
-
-matrix operator+(int l, matrix& m2)
-{
-    matrix temp(m2.rozmiar_m);
-    for (int i = 0; i < m2.rozmiar_m; i++) {
-        for (int j = 0; j < m2.rozmiar_m; j++) {
-            temp.tab[i][j] = m2.tab[i][j] + l;
+    else{
+        for (int i = 0; i < size; ++i){
+            for(int j = 0; j < size; ++j){
+                if(data[i][j] <= m.data[i][j]){
+                    return false;
+                }
+            }
         }
     }
-    return temp;
+    return true;
 }
 
-matrix operator*(int l, matrix& m2)
-{
-    matrix temp(m2.rozmiar_m);
-    for (int i = 0; i < m2.rozmiar_m; i++) {
-        for (int j = 0; j < m2.rozmiar_m; j++) {
-            temp.tab[i][j] = m2.tab[i][j] * l;
+bool matrix::operator<(const matrix& m){
+    // Porównywanie mniejszości macierzy
+    if(size != m.size){
+        return false;
+    }
+    else{
+        for (int i = 0; i < size; ++i){
+            for(int j = 0; j < size; ++j){
+                if(data[i][j] >= m.data[i][j]){
+                    return false;
+                }
+            }
         }
     }
-    return temp;
-}
-
-matrix operator-(int l , matrix& m2)
-{
-    matrix temp(m2.rozmiar_m);
-    for (int i = 0; i < m2.rozmiar_m; i++) {
-        for (int j = 0; j < m2.rozmiar_m; j++) {
-            temp.tab[i][j] = m2.tab[i][j] - l;
-        }
-    }
-    return temp;
-}
-
-std::ostream& operator<<(std::ostream os, matrix& m2)
-{
-    for (int i = 0; i < m2.rozmiar_m; i++) {
-        for (int j = 0; j < m2.rozmiar_m; j++) os << m2.tab[i][j] << " ";
-        os << std::endl;
-    }
-
+    return true;
 }
