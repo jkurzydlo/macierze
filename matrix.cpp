@@ -117,7 +117,6 @@ matrix& matrix::losuj(int x){
         j = 0;
         ++i;
     }
-    delete[] t;
     return *this;
 }
 
