@@ -1,4 +1,4 @@
-#include "matrix.hpp"
+#include "matrix.h"
 
 int main() {
     // Przykładowe użycie klasy matrix
@@ -20,13 +20,36 @@ int main() {
     // Mnożymy macierze
     matrix D = A * B;
     std::cout << "Macierz D = A * B:\n" << D << std::endl;
+    matrix E = A * 2;
+    std::cout << "Macierz E = 2 * A:\n" << E << std::endl;
+
+    matrix J = A - 2;
+    std::cout << "Macierz F = A-2:\n" << J << std::endl;
+
+    matrix Z = A + 5;
+    std::cout << "Macierz G = 5+A:\n" << J << std::endl;
+
+
+    matrix G = A;
+    matrix H = A;
+    matrix F = A.szachownica();
+    std::cout << "Szachownica:\n" << F;
+
+
+    std::cout << "\nDiagonalna:\n" << A.diagonalna();
+
+    std::cout << "\nOdwrócona A:\n" << H.dowroc();
+
+    std::cout << "\nA nad przekątną\n" << G.nad_przekatna();
 
     // Sprawdzamy, czy macierze A i B są równe
     if (A == B) {
         std::cout << "Macierze A i B są równe.\n";
-    } else {
-        std::cout << "Macierze A i B są różne.\n";
     }
+    else {
+        std::cout << "Macierze A i B są równe.\n";
+    }
+
 
     // Zakończenie programu
     return 0;
