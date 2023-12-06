@@ -99,14 +99,25 @@ matrix& matrix::losuj() {
     return *this;
 }
 
-matrix& matrix::losuj(int x) {
-    // Losujemy wartości do macierzy
+matrix& matrix::losuj(int x){
+    // wypełniamy cyframi od 0 do 9 elementy macierzy. Zmienna x określa ile cyfr będziemy losować. 
+    // Następnie algorytm losuje, w które miejsca wstawi wylosowane cyfry, aż do wypełnienia macierzy
     srand(static_cast<unsigned int>(time(0)));
-    for (int k = 0; k < size; ++k) {
-        int i = rand() % size;
-        int j = rand() % size;
-        data[i][j] = rand() % 10;
+    int* t = new int[x];
+    for(int i = 0; i < x; ++i){
+        t[i] = rand() % 10;
     }
+    int i = 0;
+    int j = 0;
+    while(i < size){
+        while(j < size){
+            data[i][j] = t[rand() % x];
+            ++j;
+        }
+        j = 0;
+        ++i;
+    }
+    delete[] t;
     return *this;
 }
 
