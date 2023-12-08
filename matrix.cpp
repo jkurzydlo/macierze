@@ -2,6 +2,9 @@
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
+#include "matrix.hpp"
+#include <fstream>
+#include <string>
 
 matrix::matrix() {
     data = nullptr;
@@ -185,6 +188,25 @@ matrix& matrix::pod_przekatna() {
     return *this;
 }
 
+void matrix::wczytaj(std::string filename)
+{
+    /// Funkcja wczytująca dane z pliku do macierzy
+    std::ifstream file;
+    file.open(filename);
+
+    int tab[30][30]{};
+    int rows = 30, columns = 30;
+
+    // Wczytujemy dane do macierzy
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < columns; j++) {
+            file >> tab[i][j];
+            wstaw(i, j, tab[i][j]);
+        }
+    }
+
+}
+
 matrix& matrix::nad_przekatna() {
     // Wstawiamy wartości nad przekątną
     for (int i = 0; i < size; ++i) {
@@ -214,6 +236,7 @@ matrix& matrix::szachownica() {
     }
     return *this;
 }
+
 
 matrix& matrix::operator+(matrix& m) {
     // Dodawanie macierzy A+B
